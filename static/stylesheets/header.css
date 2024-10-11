@@ -1,0 +1,20 @@
+/*COMPL*/
+header{
+    top: 0;
+    height: 10%;
+    width: 100%;
+    padding: 1% 0 0 0;
+    text-align: center;
+    margin: 0;
+    position: fixed;
+    background-color: rgba(206, 131, 74, 0.5);
+}
+
+header pre{
+    font-family: serif;
+    font-weight: bold;
+    color: black;
+    margin: 0;
+    padding: 0;
+    font-size: 19px;
+}

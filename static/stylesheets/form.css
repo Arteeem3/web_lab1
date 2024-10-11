@@ -1,0 +1,72 @@
+/*COMPL*/
+.custom-button {
+    background-color: rgb(206, 131, 74);
+    color: black;
+    border: none;
+    border-radius: 10px;
+    padding: 1% 0;
+    margin-bottom: 5%;
+    width: 40px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.custom-button:hover {
+    background-color: rgb(175, 120, 77);
+}
+
+/* .custom-button:focus{
+    background-color: rgb(175, 120, 77);
+} */
+
+/*.active-button {*/
+/*    background-color: white;*/
+/*}*/
+
+input[type="button"].active {
+    background-color: white;
+}
+
+
+input[type="text"], textarea {
+    padding: 1%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    max-width: 100px;
+}
+
+input[type="text"]:focus, textarea:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.checkboxgroup {
+    display: inline-block;
+    text-align: center;
+  }
+
+  .checkboxgroup label {
+    display: block;
+  }
+  
+.submit-button{
+    background-color: rgb(206, 131, 74);
+    color: black;
+    border: none;
+    border-radius: 10px;
+    padding: 2% 2%;
+    margin-bottom: 20%;
+    margin-top: 5%;
+    width: 200px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: rgb(175, 120, 77);
+}
