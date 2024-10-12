@@ -1,84 +1,75 @@
-let x, y, r;
+const buttons = document.querySelectorAll('.custom-button');
+    buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        buttons.forEach(btn => btn.classList.remove('checked'));
+        button.classList.add('checked');
+        console.log('Checked button value: ' + button.value);
+        });
+    });
 
-function setupButtons(className) {
-    document.querySelectorAll('.' + className + ' input[type="button"]').forEach(button => {
-        button.addEventListener('click', function () {
-            document.querySelectorAll('.' + className + ' input[type="button"]').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            this.classList.add('active');
-            updateValues();
-            });
-        })
+function submitForm() {
+    const x = document.querySelector('.custom-button.checked').value;
+    const y = document.getElementById('y').value.trim();
+    const rElements = document.getElementsByName('r');
+    let r;
+    for (let i = 0; i < rElements.length; i++) {
+        if (rElements[i].checked) {
+            r = rElements[i].value;
+            break;
+        }
     }
 
-    function setupY() {
-        y = document.getElementById("yInput").value.trim().replace(',','.');
+    // Validate input
+    if (!validateInput(x, y, r)) {
+        alert("Некорректные данные" + x + y + r)
+        return;
     }
 
+    // Prepare data for POST request
+    const data = new URLSearchParams();
+    data.append('x', x);
+    data.append('y', y);
+    data.append('r', r);
 
-
-    function updateValues() {
-        x = document.querySelector('.xButtons input.active')?.value;
-        r = document.querySelector('.rButtons input.active')?.value;
-    }
-
-    function isValidY() {
-    if (y === undefined || y === null || y === "") {
-        alert('Введите Y');
-        return false;
-    } else if (isNaN(parseFloat(y)) || !isFinite(y)) {
-        alert('Y должен быть числом');
-        return false;
-    } else if (parseFloat(y) < -3 || parseFloat(y) > 5) {
-        alert('Y должен быть в диапазоне от -3 до 5');
-        return false;
-    } else return true;
-}
-setupButtons('xButtons');
-setupY();
-setupButtons('rButtons');
-document.getElementById("submit").addEventListener("click", function(event) {
-    event.preventDefault(); // Prevent form submission or page reload
-
-    // Validate Y on the client side
-    isValidY();
-
-
-    const x = parseFloat(x);
-    const y = parseFloat(y);
-    const r = parseFloat(r);
-
-    // Prepare data for sending to the server
-    const data = { x: x, y: y, r: r };
-
-    // Send POST request to the server
+    // Send POST request using Fetch API
     fetch("http://localhost:21038/fcgi-bin/app.jar", {
-        method: "POST",
+        method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
     })
-        .then(resp => {
-            if(!resp.ok) { // Check if any error occurred
-                console.log('something is wrong with the response...');
-                return resp.text().then(text => { throw new Error(text) });
+        .then(response => response.json())
+        .then(result => {
+            if (result.error) {
+                alert("Ошибка сервера: " + result.error);
+            } else {
+                addResultToTable({
+                    x: x,
+                    y: y,
+                    r: r,
+                    hit: result.result,
+                    timestamp: new Date().toLocaleString(),
+                    executionTime: result.executionTime + ' ms' // Use executionTime from backend
+                });
             }
-            else {
-                console.log('success');
-                return resp.json(); // Convert to JSON
-            }
-        })
-        .then(result => { // Handle the data from the response
-            console.log('result is: ' + JSON.stringify(result, null, 2)); // Pretty-print the JSON result
-            addResultToTable(x, y, r, result.response.hit, result.currentTime, result.elapsedTime);
         })
         .catch(error => {
-            console.error("catch error:", error);
+            alert("Ошибка запроса: " + error);
         });
-});
+}
+
+function validateInput(x, y, r) {
+    const xValue = parseFloat(x);
+    const yValue = parseFloat(y.replace(',', '.'));
+    const rValue = parseFloat(r);
+
+    if (isNaN(xValue) || isNaN(yValue) || isNaN(rValue)) return false;
+    if (yValue < -3 || yValue > 5) return false; // Ensure correct range for y
+    return [1, 2, 3, 4, 5].includes(rValue) && [-4, -3, -2, -1, 0, 1, 2, 3, 4].includes(xValue);
+}
+
 
 
 
@@ -97,7 +88,7 @@ function addResultToTable(x, y, r, hit, currentTime, elapsedTime) {
     rCell.textContent = r;
 
     const resultCell = document.createElement("td");
-    resultCell.textContent = hit ? "Hit" : "Miss";
+    resultCell.textContent = hit ? "Попал" : "Промах";
 
     const currentTimeCell = document.createElement("td");
     currentTimeCell.textContent = currentTime;

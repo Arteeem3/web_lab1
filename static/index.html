@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="Windows-1251">
+    <meta charset="UTF-8">
     <title>WEB_LAB_1</title>
     <link rel="stylesheet" href="stylesheets/stylesheet.css">
     <link rel="stylesheet" href="stylesheets/header.css">
@@ -11,59 +11,54 @@
 </head>
 <body>
     <header>
-        <pre class="head_pre">Соколов Артём<br>P3218<br>409599</pre>
+        <pre class="head_pre">РЎРѕРєРѕР»РѕРІ РђСЂС‚С‘Рј<br>P3218<br>409599</pre>
     </header>
     <div class="first-row">
         <div class="container">
             <div>
                 <form>
-                    <p>Выберите x:</p>
+                    <p>Р’С‹Р±РµСЂРёС‚Рµ x:</p>
                     <div class="xButtons">
-                        <input class="custom-button" type="button" name="xValue" value="-4">
-                        <input class="custom-button" type="button" name="xValue" value="-3">
-                        <input class="custom-button" type="button" name="xValue" value="-2">
-                        <input class="custom-button" type="button" name="xValue" value="-1">
-                        <input class="custom-button" type="button" name="xValue" value="0">
-                        <input class="custom-button" type="button" name="xValue" value="1">
-                        <input class="custom-button" type="button" name="xValue" value="2">
-                        <input class="custom-button" type="button" name="xValue" value="3">
-                        <input class="custom-button" type="button" name="xValue" value="4">
+                        <input class="custom-button" type="button" name="x" value="-4">
+                        <input class="custom-button" type="button" name="x" value="-3">
+                        <input class="custom-button" type="button" name="x" value="-2">
+                        <input class="custom-button" type="button" name="x" value="-1">
+                        <input class="custom-button" type="button" name="x" value="0">
+                        <input class="custom-button" type="button" name="x" value="1">
+                        <input class="custom-button" type="button" name="x" value="2">
+                        <input class="custom-button" type="button" name="x" value="3">
+                        <input class="custom-button" type="button" name="x" value="4">
                     </div>
                 </form>
             </div>
             <div class="form">
-                <p>Введите y:</p>
-                <input name="yValue" id="yInput" type="text" placeholder="(от -3 до 5)" maxlength="10">
+                <p>Р’РІРµРґРёС‚Рµ y:</p>
+                <input name="yValue" id="y" type="text" placeholder="(РѕС‚ -3 РґРѕ 5)" maxlength="10">
             </div>
             <div id="checkboxes">
                 <form>
-                    <p>Выберите R:</p>
+                    <p>Р’С‹Р±РµСЂРёС‚Рµ R:</p>
                     <div class="rRadio">
-                        <div class="rButtons">
-                        <input type="radio" id="r1" name="rValue" value="1">
-                        <label for="r1">1</label>
-                    </div>
-                    <div class="rButtons">
-                        <input type="radio" id="r2" name="rValue" value="2">
-                        <label for="r2">2</label>
-                    </div>
-                    <div class="rButtons">
-                        <input type="radio" id="r3" name="rValue" value="3">
-                        <label for="r3">3</label>
-                    </div>
-                    <div class="rButtons">
-                        <input type="radio" id="r4" name="rValue" value="4">
-                        <label for="r4">4</label>
-                    </div>
-                    <div class="rButtons">
-                        <input type="radio" id="r5" name="rValue" value="5">
-                        <label for="r5">5</label>
-                    </div>
+                        <label>
+                            <input type="radio" name="r" value="1" required>
+                        </label> 1
+                        <label>
+                            <input type="radio" name="r" value="2">
+                        </label> 2
+                        <label>
+                            <input type="radio" name="r" value="3">
+                        </label> 3
+                        <label>
+                            <input type="radio" name="r" value="4">
+                        </label> 4
+                        <label>
+                            <input type="radio" name="r" value="5">
+                        </label> 5
                     </div>
                 </form>
             </div>
             <div>
-                <button class="submit-button" id="submit">Проверить попадание</button>
+                <button class="submit-button" id="submit" onclick="submitForm()">РџСЂРѕРІРµСЂРёС‚СЊ РїРѕРїР°РґР°РЅРёРµ</button>
             </div>
         </div>
         <div class="graph">
@@ -77,9 +72,9 @@
                 <th>X</th>
                 <th>Y</th>
                 <th>R</th>
-                <th>ОДЗ</th>
-                <th>Текущее время</th>
-                <th>Время выполнения скрипта</th>
+                <th>Р РµР·СѓР»СЊС‚Р°С‚</th>
+                <th>РўРµРєСѓС‰РµРµ РІСЂРµРјСЏ</th>
+                <th>Р’СЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ СЃРєСЂРёРїС‚Р°</th>
             </tr>
             </thead>
             <tbody>

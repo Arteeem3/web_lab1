@@ -17,15 +17,7 @@
     background-color: rgb(175, 120, 77);
 }
 
-/* .custom-button:focus{
-    background-color: rgb(175, 120, 77);
-} */
-
-/*.active-button {*/
-/*    background-color: white;*/
-/*}*/
-
-input[type="button"].active {
+.custom-button.checked {
     background-color: white;
 }
 
@@ -42,15 +34,6 @@ input[type="text"]:focus, textarea:focus {
     border-color: #4CAF50;
     outline: none;
 }
-
-.checkboxgroup {
-    display: inline-block;
-    text-align: center;
-  }
-
-  .checkboxgroup label {
-    display: block;
-  }
   
 .submit-button{
     background-color: rgb(206, 131, 74);
