@@ -21,7 +21,7 @@ function submitForm() {
 
     // Validate input
     if (!validateInput(x, y, r)) {
-        alert("Некорректные данные" + x + y + r)
+        alert("Некорректные данные: x=" + x + ", y=" + y + ", r=" + r);
         return;
     }
 
@@ -31,21 +31,23 @@ function submitForm() {
     data.append('y', y);
     data.append('r', r);
 
+    console.log("Data being sent to server:", { x, y, r });
+
     // Send POST request using Fetch API
-    fetch("http://localhost:21038/fcgi-bin/app.jar", {
+fetch('http://localhost:21038/fcgi-bin/app.jar', {
         method: 'POST',
         headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
-        body: JSON.stringify(data),
+        body: data.toString(),
     })
+        .then(response => console.log(response))
         .then(response => response.json())
         .then(result => {
             if (result.error) {
                 alert("Ошибка сервера: " + result.error);
             } else {
-                addResultToTable({
+                updateResults({
                     x: x,
                     y: y,
                     r: r,
@@ -60,6 +62,7 @@ function submitForm() {
         });
 }
 
+
 function validateInput(x, y, r) {
     const xValue = parseFloat(x);
     const yValue = parseFloat(y.replace(',', '.'));
@@ -70,39 +73,16 @@ function validateInput(x, y, r) {
     return [1, 2, 3, 4, 5].includes(rValue) && [-4, -3, -2, -1, 0, 1, 2, 3, 4].includes(xValue);
 }
 
-
-
-
-
-function addResultToTable(x, y, r, hit, currentTime, elapsedTime) {
-    const resultBody = document.getElementById("result-body");
-    const newRow = document.createElement("tr");
-
-    const xCell = document.createElement("td");
-    xCell.textContent = x;
-
-    const yCell = document.createElement("td");
-    yCell.textContent = y;
-
-    const rCell = document.createElement("td");
-    rCell.textContent = r;
-
-    const resultCell = document.createElement("td");
-    resultCell.textContent = hit ? "Попал" : "Промах";
-
-    const currentTimeCell = document.createElement("td");
-    currentTimeCell.textContent = currentTime;
-
-    const elapsedTimeCell = document.createElement("td");
-    elapsedTimeCell.textContent = elapsedTime + " ms";
-
-    newRow.appendChild(xCell);
-    newRow.appendChild(yCell);
-    newRow.appendChild(rCell);
-    newRow.appendChild(resultCell);
-    newRow.appendChild(currentTimeCell);
-    newRow.appendChild(elapsedTimeCell);
-
-    resultBody.appendChild(newRow);
+function updateResults(result) {
+    const table = document.getElementById('resultTable');
+    const row = table.insertRow(1);
+    row.insertCell(0).innerText = result.x;
+    row.insertCell(1).innerText = result.y;
+    row.insertCell(2).innerText = result.r;
+    row.insertCell(3).innerText = result.hit ? 'Попадание' : 'Промах';
+    row.insertCell(4).innerText = result.timestamp;
+    row.insertCell(5).innerText = result.executionTime;
 }
+
+
 
