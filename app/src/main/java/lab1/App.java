@@ -7,8 +7,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.time.Instant;
 import java.time.Duration;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Logger;
 import com.fastcgi.FCGIInterface;
 
@@ -34,12 +32,14 @@ public class App {
                 if ("GET".equalsIgnoreCase(method)) {
                     String queryString = FCGIInterface.request.params.getProperty("QUERY_STRING");
                     params = parseParams(queryString);
+                    log.info("params data " + params);
                 } else if ("POST".equalsIgnoreCase(method)) {
                     String contentLengthStr = FCGIInterface.request.params.getProperty("CONTENT_LENGTH");
                     String postDataStr = getPostDataStr(contentLengthStr);
                     params = parseParams(postDataStr);
+                    log.info("params data " + params);
                 } else {
-                    sendJson(System.currentTimeMillis(),"{\"error\": \"Unsupported HTTP method\"}");
+                    sendJson("{\"error\": \"Unsupported HTTP method\"}");
                     continue;
                 }
 
@@ -55,18 +55,21 @@ public class App {
 
                     // Include execution time in response
                     String jsonResponse = String.format("{\"result\": %b, \"executionTime\": %d}", result, executionTimeMillis);
-                    sendJson(System.currentTimeMillis(), jsonResponse);
+                    sendJson(jsonResponse);
+                    log.info("response data " + jsonResponse);
                 } else {
                     Instant endTime = Instant.now();
                     long executionTimeMillis = Duration.between(startTime, endTime).toMillis();
                     String jsonResponse = String.format("{\"error\": \"invalid data\", \"executionTime\": %d}", executionTimeMillis);
-                    sendJson(System.currentTimeMillis(), jsonResponse);
+                    sendJson(jsonResponse);
+                    log.info("response data " + jsonResponse);
                 }
             } catch (Exception e) {
                 Instant endTime = Instant.now();
                 long executionTimeMillis = Duration.between(startTime, endTime).toMillis();
                 String jsonResponse = String.format("{\"error\": \"%s\", \"executionTime\": %d}", e.getMessage(), executionTimeMillis);
-                sendJson(System.currentTimeMillis(), jsonResponse);
+                sendJson(jsonResponse);
+                log.info("response data " + jsonResponse);
             }
         }
     }
@@ -86,17 +89,8 @@ public class App {
         return new String(postData, 0, totalRead);
     }
 
-    private static void sendJson(long startTime, String jsonDump) {
-        long currentTime = System.currentTimeMillis();
-        long elapsedTime = currentTime - startTime;
-        String currentTimeStr = new SimpleDateFormat("HH:mm:ss.SSS").format(new Date(currentTime));
-
-        String responseJson = String.format("{\"response\": %s, \"currentTime\": \"%s\", \"elapsedTime\": %d}",
-                jsonDump, currentTimeStr, elapsedTime);
-
-        log.info("in send func");
-        log.info(String.format(RESPONSE_TEMPLATE, responseJson.getBytes(StandardCharsets.UTF_8).length, responseJson));
-        System.out.println(String.format(RESPONSE_TEMPLATE, responseJson.getBytes(StandardCharsets.UTF_8).length, responseJson));
+    private static void sendJson(String jsonDump) {
+        System.out.printf((RESPONSE_TEMPLATE) + "%n", jsonDump.getBytes(StandardCharsets.UTF_8).length, jsonDump);
     }
 
     private static Map<String, String> parseParams(String data) {

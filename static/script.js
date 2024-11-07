@@ -34,14 +34,13 @@ function submitForm() {
     console.log("Data being sent to server:", { x, y, r });
 
     // Send POST request using Fetch API
-fetch('http://localhost:21038/fcgi-bin/app.jar', {
+fetch('http://localhost:21038/fcgi-bin/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
         body: data.toString(),
     })
-        .then(response => console.log(response))
         .then(response => response.json())
         .then(result => {
             if (result.error) {
