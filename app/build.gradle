@@ -22,9 +22,12 @@ dependencies {
 
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:31.1-jre'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.0'
     
     implementation files('../libs/fastcgi-lib.jar')
 }
+
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -41,7 +44,9 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+
 jar {
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     manifest {
         attributes(
                 'Main-Class': 'lab1.App'

@@ -1,11 +1,13 @@
 const buttons = document.querySelectorAll('.custom-button');
-    buttons.forEach(button => {
+buttons.forEach(button => {
     button.addEventListener('click', () => {
         buttons.forEach(btn => btn.classList.remove('checked'));
         button.classList.add('checked');
         console.log('Checked button value: ' + button.value);
-        });
     });
+});
+
+document.addEventListener('DOMContentLoaded', loadResults); // Загрузить сохранённые результаты при загрузке страницы
 
 function submitForm() {
     const x = document.querySelector('.custom-button.checked').value;
@@ -34,33 +36,34 @@ function submitForm() {
     console.log("Data being sent to server:", { x, y, r });
 
     // Send POST request using Fetch API
-fetch('http://localhost:21038/fcgi-bin/', {
+    fetch('http://localhost:21038/fcgi-bin/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
         body: data.toString(),
     })
-        .then(response => response.json())
-        .then(result => {
-            if (result.error) {
-                alert("Ошибка сервера: " + result.error);
-            } else {
-                updateResults({
-                    x: x,
-                    y: y,
-                    r: r,
-                    hit: result.result,
-                    timestamp: new Date().toLocaleString(),
-                    executionTime: result.executionTime + ' ms' // Use executionTime from backend
-                });
-            }
-        })
-        .catch(error => {
-            alert("Ошибка запроса: " + error);
-        });
+    .then(response => response.json())
+    .then(result => {
+        if (result.error) {
+            alert("Ошибка сервера: " + result.error);
+        } else {
+            const newResult = {
+                x: x,
+                y: y,
+                r: r,
+                hit: result.result,
+                timestamp: new Date().toLocaleString(),
+                executionTime: result.executionTime + ' ms' // Use executionTime from backend
+            };
+            updateResults(newResult);
+            saveResult(newResult); // Сохранить результат в localStorage
+        }
+    })
+    .catch(error => {
+        alert("Ошибка запроса: " + error);
+    });
 }
-
 
 function validateInput(x, y, r) {
     const xValue = parseFloat(x);
@@ -83,5 +86,14 @@ function updateResults(result) {
     row.insertCell(5).innerText = result.executionTime;
 }
 
+function saveResult(result) {
+    // Получаем текущие сохранённые результаты из localStorage или пустой массив
+    const results = JSON.parse(localStorage.getItem('results')) || [];
+    results.push(result);
+    localStorage.setItem('results', JSON.stringify(results)); // Сохраняем обновлённый массив результатов
+}
 
-
+function loadResults() {
+    const results = JSON.parse(localStorage.getItem('results')) || [];
+    results.forEach(updateResults); // Добавляем каждый результат в таблицу
+}
